@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FargowiltasSouls.Core.TogglerV2;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -6,11 +7,22 @@ using Terraria.ModLoader;
 namespace FargowiltasSouls.Content.Items.Accessories.Souls
 {
     //[AutoloadEquip(EquipType.Waist)]
-    public class BerserkerSoul : BaseSoul
-    {
+    public class BerserkerSoul : BaseSoul {
+        public static ToggleDefinition TMeleeSpeed;
+        public static ToggleDefinition TMagmaStone;
+        public static ToggleDefinition TYoyoBag;
+        public static ToggleDefinition TMoonCharm;
+        public static ToggleDefinition TNeptuneShell;
+
         public override void SetStaticDefaults()
         {
             base.SetStaticDefaults();
+
+            TMeleeSpeed = ToggleHelper.NewToggle("BerserkerMeleeSpeed", ToggleCategory.UniverseSoul);
+            TMagmaStone = ToggleHelper.NewToggle("BerserkerMagmaStone", ToggleCategory.UniverseSoul);
+            TYoyoBag = ToggleHelper.NewToggle("BerserkerYoyoBag", ToggleCategory.UniverseSoul);
+            TMoonCharm = ToggleHelper.NewToggle("BerserkerMoonCharm", ToggleCategory.UniverseSoul);
+            TNeptuneShell = ToggleHelper.NewToggle("BerserkerNeptuneShell", ToggleCategory.UniverseSoul);
 
             // DisplayName.SetDefault("Berserker's Soul");
 
@@ -44,24 +56,33 @@ Effects of the Fire Gauntlet, Yoyo Bag, and Celestial Shell
 
         protected override Color? nameColor => new Color(255, 111, 6);
 
+        public static void EquipToggles(Player player) {
+            TMeleeSpeed.Equip(player);
+            TMagmaStone.Equip(player);
+            TYoyoBag.Equip(player);
+            TMoonCharm.Equip(player);
+            TNeptuneShell.Equip(player);
+        }
+
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
+            EquipToggles(player);
+
             player.GetDamage(DamageClass.Melee) += 0.3f;
             player.GetCritChance(DamageClass.Melee) += 15;
 
-            if (player.GetToggleValue("Melee"))
+            if (TMeleeSpeed.CanTakeEffect(player))
                 player.GetAttackSpeed(DamageClass.Melee) += .2f;
 
             //gauntlet
-            if (player.GetToggleValue("MagmaStone"))
-            {
+            if (TMagmaStone.CanTakeEffect(player))
                 player.magmaStone = true;
-            }
+
             player.kbGlove = true;
             player.autoReuseGlove = true;
             player.meleeScaleGlove = true;
 
-            if (player.GetToggleValue("YoyoBag", false))
+            if (TYoyoBag.CanTakeEffect(player, true))
             {
                 player.counterWeight = 556 + Main.rand.Next(6);
                 player.yoyoGlove = true;
@@ -69,12 +90,12 @@ Effects of the Fire Gauntlet, Yoyo Bag, and Celestial Shell
             }
 
             //celestial shell
-            if (player.GetToggleValue("MoonCharm"))
+            if (TMoonCharm.CanTakeEffect(player))
             {
                 player.wolfAcc = true;
             }
 
-            if (player.GetToggleValue("NeptuneShell"))
+            if (TNeptuneShell.CanTakeEffect(player))
             {
                 player.accMerman = true;
             }

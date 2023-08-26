@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FargowiltasSouls.Core.TogglerV2;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -6,11 +7,14 @@ using Terraria.ModLoader;
 namespace FargowiltasSouls.Content.Items.Accessories.Souls
 {
     //[AutoloadEquip(EquipType.Neck)]
-    public class SnipersSoul : BaseSoul
-    {
+    public class SnipersSoul : BaseSoul {
+        public static ToggleDefinition TSniperScope;
+        
         public override void SetStaticDefaults()
         {
             base.SetStaticDefaults();
+
+            TSniperScope = ToggleHelper.NewToggle("SniperScope", ToggleCategory.UniverseSoul);
 
             // DisplayName.SetDefault("Sniper's Soul");
 
@@ -37,8 +41,13 @@ Effects of Sniper Scope
 
         protected override Color? nameColor => new Color(188, 253, 68);
 
-        public override void UpdateAccessory(Player player, bool hideVisual)
-        {
+        public static void EquipToggles(Player player) {
+            TSniperScope.Equip(player);
+        }
+        
+        public override void UpdateAccessory(Player player, bool hideVisual) {
+            EquipToggles(player);
+            
             //reduce ammo consume
             player.GetModPlayer<FargoSoulsPlayer>().RangedSoul = true;
             player.GetDamage(DamageClass.Ranged) += 0.3f;
@@ -46,10 +55,8 @@ Effects of Sniper Scope
 
             //add new effects
 
-            if (player.GetToggleValue("Sniper"))
-            {
+            if (TSniperScope.CanTakeEffect(player))
                 player.scope = true;
-            }
         }
 
         public override void AddRecipes()

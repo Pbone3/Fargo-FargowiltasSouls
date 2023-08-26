@@ -1,3 +1,4 @@
+using FargowiltasSouls.Core.TogglerV2;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -5,12 +6,14 @@ using Terraria.ModLoader;
 
 namespace FargowiltasSouls.Content.Items.Accessories.Souls
 {
-    public class UniverseSoul : BaseSoul
-    {
+    public class UniverseSoul : BaseSoul {
+        public static ToggleDefinition TUniverseAttackSpeed;
+
         public override void SetStaticDefaults()
         {
             base.SetStaticDefaults();
 
+            TUniverseAttackSpeed = ToggleHelper.NewToggle("UniverseAttackSpeed", ToggleCategory.UniverseSoul);
             // DisplayName.SetDefault("Soul of the Universe");
 
             string tooltip =
@@ -47,6 +50,12 @@ Effects of Sniper Scope, Celestial Cuffs and Mana Flower
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
+            TUniverseAttackSpeed.Equip(player);
+            
+            ArchWizardsSoul.EquipToggles(player);
+            BerserkerSoul.EquipToggles(player);
+            SnipersSoul.EquipToggles(player);
+
             DamageClass damageClass = player.ProcessDamageTypeFromHeldItem();
             player.GetDamage(damageClass) += .66f;
             player.GetCritChance(damageClass) += 25;
@@ -56,21 +65,20 @@ Effects of Sniper Scope, Celestial Cuffs and Mana Flower
             modPlayer.UniverseSoul = true;
             modPlayer.UniverseCore = true;
 
-            if (player.GetToggleValue("Universe"))
+            if (TUniverseAttackSpeed.CanTakeEffect(player))
                 modPlayer.AttackSpeed += .5f;
 
             player.maxMinions += 2;
             player.maxTurrets += 2;
 
-            if (player.GetToggleValue("MagmaStone"))
-            {
+            if (BerserkerSoul.TMagmaStone.CanTakeEffect(player))
                 player.magmaStone = true;
-            }
+
             player.kbGlove = true;
             player.autoReuseGlove = true;
             player.meleeScaleGlove = true;
 
-            if (player.GetToggleValue("YoyoBag", false))
+            if (BerserkerSoul.TYoyoBag.CanTakeEffect(player, true))
             {
                 player.counterWeight = 556 + Main.rand.Next(6);
                 player.yoyoGlove = true;
@@ -78,15 +86,11 @@ Effects of Sniper Scope, Celestial Cuffs and Mana Flower
             }
 
             //celestial shell
-            if (player.GetToggleValue("MoonCharm"))
-            {
+            if (BerserkerSoul.TMoonCharm.CanTakeEffect(player))
                 player.wolfAcc = true;
-            }
 
-            if (player.GetToggleValue("NeptuneShell"))
-            {
+            if (BerserkerSoul.TNeptuneShell.CanTakeEffect(player))
                 player.accMerman = true;
-            }
 
             if (hideVisual)
             {
@@ -96,13 +100,12 @@ Effects of Sniper Scope, Celestial Cuffs and Mana Flower
 
             player.lifeRegen += 2;
 
-            if (player.GetToggleValue("Sniper"))
-            {
+            if (SnipersSoul.TSniperScope.CanTakeEffect(player))
                 player.scope = true;
-            }
 
-            if (player.GetToggleValue("ManaFlower", false))
+            if (ArchWizardsSoul.TManaFlower.CanTakeEffect(player))
                 player.manaFlower = true;
+
             player.manaMagnet = true;
             player.magicCuffs = true;
         }

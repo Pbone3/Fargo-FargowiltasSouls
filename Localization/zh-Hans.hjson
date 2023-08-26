@@ -664,6 +664,7 @@ Mods: {
 			SoulTogglerButton: 设置饰品效果
 			EternityEnabled: 永恒模式已开启
 			MasochistEnabled: 受虐模式已开启
+			// TogglerV2.UnknownEquipper: Unknown
 		}
 
 		ItemExtra: {
@@ -6479,5 +6480,19 @@ Mods: {
 		}
 
 		// Conditions.RoombaPetSold: Mods.FargowiltasSouls.Conditions.RoombaPetSold
+
+		Toggles: {
+			UniverseSoul: {
+				// DisplayName: Combat Souls
+				// ArchWizardManaFlower.DisplayName: Mana Flower
+				// BerserkerMeleeSpeed.DisplayName: Bers~erker Melee Speed
+				// BerserkerMagmaStone.DisplayName: Magma Stone
+				// BerserkerYoyoBag.DisplayName: Yoyo Bag
+				// BerserkerMoonCharm.DisplayName: Moon Charm
+				// BerserkerNeptuneShell.DisplayName: Neptune Shell
+				// SniperScope.DisplayName: Sniper Scope
+				// UniverseAttackSpeed.DisplayName: Universe Attack Speed
+			}
+		}
 	}
 }

@@ -10,15 +10,15 @@ namespace FargowiltasSouls.Core.Toggler.Content
         public override int Priority => 1;
         public override bool Active => true;
 
-        public int UniverseHeader = ModContent.ItemType<UniverseSoul>();
-        public string Melee;
-        public string MagmaStone;
-        public string YoyoBag;
-        public string MoonCharm;
-        public string NeptuneShell;
-        public string Sniper;
-        public string ManaFlower;
-        public string Universe;
+        //public int UniverseHeader = ModContent.ItemType<UniverseSoul>();
+        //public string Melee;
+        //public string MagmaStone;
+        //public string YoyoBag;
+        //public string MoonCharm;
+        //public string NeptuneShell;
+        //public string Sniper;
+        //public string ManaFlower;
+        //public string Universe;
 
         public int WorldShaperHeader = ModContent.ItemType<WorldShaperSoul>();
         public string MiningHunt;

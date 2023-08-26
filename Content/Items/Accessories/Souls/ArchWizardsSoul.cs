@@ -1,15 +1,18 @@
-﻿using Microsoft.Xna.Framework;
+﻿using FargowiltasSouls.Core.TogglerV2;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace FargowiltasSouls.Content.Items.Accessories.Souls
 {
-    public class ArchWizardsSoul : BaseSoul
-    {
+    public class ArchWizardsSoul : BaseSoul {
+        public static ToggleDefinition TManaFlower;
+
         public override void SetStaticDefaults()
         {
             base.SetStaticDefaults();
+            TManaFlower = ToggleHelper.NewToggle("ArchWizardManaFlower", ToggleCategory.UniverseSoul);
 
             // DisplayName.SetDefault("Arch Wizard's Soul");
 
@@ -37,14 +40,20 @@ Effects of Celestial Cuffs and Mana Flower
 
         protected override Color? nameColor => new Color(255, 83, 255);
 
+        public static void EquipToggles(Player player) {
+            TManaFlower.Equip(player);
+        }
+
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
+            EquipToggles(player);
+            
             player.GetModPlayer<FargoSoulsPlayer>().MagicSoul = true;
             player.GetDamage(DamageClass.Magic) += .3f;
             player.GetCritChance(DamageClass.Magic) += 15;
             player.statManaMax2 += 200;
             //accessorys
-            if (player.GetToggleValue("ManaFlower", false))
+            if (TManaFlower.CanTakeEffect(player, true))
                 player.manaFlower = true;
             //add mana cloak
             player.manaMagnet = true;
