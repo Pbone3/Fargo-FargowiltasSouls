@@ -16,6 +16,7 @@ namespace FargowiltasSouls.Core.ModPlayers
         public bool NekomiSet;
         public int NekomiMeter;
         public int NekomiTimer;
+        public int NekomiHitCD;
 
         //        //minions
         public bool BrainMinion;
@@ -32,6 +33,7 @@ namespace FargowiltasSouls.Core.ModPlayers
         public bool BabySilhouette;
         public bool BabyLifelight;
         public bool BiteSizeBaron;
+        public bool Nibble;
         public bool ChibiDevi;
         public bool MutantSpawn;
         public bool BabyAbom;
@@ -70,6 +72,8 @@ namespace FargowiltasSouls.Core.ModPlayers
         public bool TinCritBuffered;
         public Item TungstenEnchantItem;
         public int TungstenCD;
+        public Item AshWoodEnchantItem;
+        public int AshwoodCD;
         //force of earth
         public Item AdamantiteEnchantItem;
         public bool AdamantiteCanSplit;

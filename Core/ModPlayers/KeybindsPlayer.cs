@@ -13,6 +13,8 @@ namespace FargowiltasSouls.Core.ModPlayers
     {
         public override void ProcessTriggers(TriggersSet triggersSet)
         {
+            #region ignores stuns
+
             if (Mash)
             {
                 Player.doubleTapCardinalTimer[0] = 0;
@@ -59,16 +61,6 @@ namespace FargowiltasSouls.Core.ModPlayers
                     MashPressed[3] = false;
             }
 
-            if (FargowiltasSouls.GoldKey.JustPressed && GoldEnchantActive)
-            {
-                GoldKey();
-            }
-
-            if (GoldShell)
-            {
-                return;
-            }
-
             if (FargowiltasSouls.FreezeKey.JustPressed)
             {
                 if (StardustEnchantActive && !Player.HasBuff(ModContent.BuffType<TimeStopCDBuff>()))
@@ -106,25 +98,6 @@ namespace FargowiltasSouls.Core.ModPlayers
                 }
             }
 
-
-            if (FargowiltasSouls.SmokeBombKey.JustPressed && CrystalEnchantActive && SmokeBombCD == 0)
-                CrystalAssassinEnchant.SmokeBombKey(this);
-
-            if (FargowiltasSouls.SpecialDashKey.JustPressed && (BetsysHeartItem != null || QueenStingerItem != null))
-                SpecialDashKey();
-
-            if (FargowiltasSouls.MagicalBulbKey.JustPressed && MagicalBulb)
-                MagicalBulbKey();
-
-            if (FrigidGemstoneItem != null)
-            {
-                if (FrigidGemstoneCD > 0)
-                    FrigidGemstoneCD--;
-
-                if (FargowiltasSouls.FrigidSpellKey.Current)
-                    FrigidGemstoneKey();
-            }
-
             if (PrecisionSeal)
             {
                 if (SoulConfig.Instance.PrecisionSealIsHold)
@@ -144,17 +117,51 @@ namespace FargowiltasSouls.Core.ModPlayers
                 Player.doubleTapCardinalTimer[3] = 0;
             }
 
+            if (FargowiltasSouls.AmmoCycleKey.JustPressed && CanAmmoCycle)
+                AmmoCycleKey();
+
+            if (FargowiltasSouls.SoulToggleKey.JustPressed)
+                FargoUIManager.ToggleSoulToggler();
+
+            if (FargowiltasSouls.GoldKey.JustPressed && GoldEnchantActive)
+            {
+                GoldKey();
+            }
+
+            #endregion
+
+            if (GoldShell || Player.CCed || NoUsingItems > 2)
+            {
+                return;
+            }
+
+            #region blocked by stuns
+
+            if (FargowiltasSouls.SmokeBombKey.JustPressed && CrystalEnchantActive && SmokeBombCD == 0)
+                CrystalAssassinEnchant.SmokeBombKey(this);
+
+            if (FargowiltasSouls.SpecialDashKey.JustPressed && (BetsysHeartItem != null || QueenStingerItem != null))
+                SpecialDashKey();
+
+            if (FargowiltasSouls.MagicalBulbKey.JustPressed && MagicalBulb)
+                MagicalBulbKey();
+
+            if (FrigidGemstoneItem != null)
+            {
+                if (FrigidGemstoneCD > 0)
+                    FrigidGemstoneCD--;
+
+                if (FargowiltasSouls.FrigidSpellKey.Current)
+                    FrigidGemstoneKey();
+            }
+
             if (FargowiltasSouls.BombKey.JustPressed)
                 BombKey();
 
             if (FargowiltasSouls.DebuffInstallKey.JustPressed)
                 DebuffInstallKey();
 
-            if (FargowiltasSouls.AmmoCycleKey.JustPressed && CanAmmoCycle)
-                AmmoCycleKey();
-
-            if (FargowiltasSouls.SoulToggleKey.JustPressed)
-                FargoUIManager.ToggleSoulToggler();
+            #endregion
         }
     }
 }

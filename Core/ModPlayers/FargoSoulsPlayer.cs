@@ -157,6 +157,8 @@ namespace FargowiltasSouls.Core.ModPlayers
             GaiaSet = false;
             StyxSet = false;
             NekomiSet = false;
+            if (NekomiHitCD > 0)
+                NekomiHitCD--;
 
             BrainMinion = false;
             EaterMinion = false;
@@ -170,6 +172,7 @@ namespace FargowiltasSouls.Core.ModPlayers
             BabyLifelight = false;
             BabySilhouette = false;
             BiteSizeBaron = false;
+            Nibble = false;
             ChibiDevi = false;
             MutantSpawn = false;
             BabyAbom = false;
@@ -235,6 +238,7 @@ namespace FargowiltasSouls.Core.ModPlayers
             EbonwoodEnchantItem = null;
             ShadewoodEnchantItem = null;
             PearlwoodEnchantItem = null;
+            AshWoodEnchantItem = null;
 
             RainEnchantActive = false;
             AncientShadowEnchantActive = false;
@@ -584,15 +588,6 @@ namespace FargowiltasSouls.Core.ModPlayers
             if (!HaveCheckedAttackSpeed)
             {
                 HaveCheckedAttackSpeed = true;
-
-                if (!Berserked && !TribalCharm && BoxofGizmos && !item.autoReuse && !Player.autoReuseAllWeapons && !Player.FeralGloveReuse(item))
-                {
-                    int targetUseTime = useTime + 6;
-                    while (useTime / AttackSpeed < targetUseTime)
-                    {
-                        AttackSpeed -= .05f;
-                    }
-                }
 
                 if (Berserked)
                 {
@@ -1411,14 +1406,17 @@ namespace FargowiltasSouls.Core.ModPlayers
 
             if (BorealEnchantItem != null && Player.GetToggleValue("Boreal") && BorealCD <= 0)
             {
-                BorealCD = 60;
+                BorealCD = WoodForce ? 30 : 60;
 
-                if (WoodForce)
-                {
-                    BorealCD = 30;
-                }
 
                 BorealWoodEnchant.BorealSnowballs(this, damage);
+            }
+
+            bool ashBurning = AshWoodEnchantItem != null && (Player.onFire || Player.onFire2 || Player.onFire3);
+            if ((ashBurning || ObsidianEnchantItem != null) && Player.GetToggleValue("AshWood") && AshwoodCD <= 0)
+            {
+                AshwoodCD = TerraForce ? 20 : 30;
+                AshWoodEnchant.AshwoodFireball(this, damage);
             }
 
             if (AdditionalAttacks && AdditionalAttacksTimer <= 0)

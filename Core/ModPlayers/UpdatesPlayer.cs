@@ -3,6 +3,7 @@ using FargowiltasSouls.Content.Buffs.Souls;
 using FargowiltasSouls.Content.Items.Accessories.Enchantments;
 using FargowiltasSouls.Content.Items.Armor;
 using FargowiltasSouls.Core.Globals;
+using FargowiltasSouls.Core.Systems;
 using FargowiltasSouls.Core.Toggler;
 using Microsoft.Xna.Framework;
 using System;
@@ -132,6 +133,12 @@ namespace FargowiltasSouls.Core.ModPlayers
             {
                 Player.controlUseItem = true;
                 Player.releaseUseItem = true;
+            }
+
+            if (LowGround)
+            {
+                Player.gravControl = false;
+                Player.gravControl2 = false;
             }
         }
 
@@ -440,6 +447,11 @@ namespace FargowiltasSouls.Core.ModPlayers
             if (Anticoagulation)
                 DamageOverTime(4, true);
 
+            if (Player.onFire && Player.GetModPlayer<FargoSoulsPlayer>().AshWoodEnchantItem != null)
+            {
+                Player.lifeRegen += 8;
+            }
+
             if (Player.lifeRegen < 0)
             {
                 if (TerraForce)
@@ -452,6 +464,14 @@ namespace FargowiltasSouls.Core.ModPlayers
                 }
 
                 FusedLensCanDebuff = true;
+            }
+
+            //placed here so it runs after our modded dots
+            if (WorldSavingSystem.EternityMode && !WorldSavingSystem.MasochistModeReal)
+            {
+                //silently make it much harder to die to DOT debuffs
+                if (Player.lifeRegen < 0 && Player.statLife < 10)
+                    Player.lifeRegen = 0;
             }
         }
 
@@ -668,10 +688,6 @@ namespace FargowiltasSouls.Core.ModPlayers
             }
 
             StatLifePrevious = Player.statLife;
-
-            if (EbonwoodEnchantItem != null)
-                EbonwoodEnchant.EbonwoodEffect(Player);
-
 
             if (TitaniumDRBuff && prevDyes == null)
             {

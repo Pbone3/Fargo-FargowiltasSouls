@@ -211,7 +211,7 @@ namespace FargowiltasSouls.Content.Projectiles
                 case ProjectileID.DD2ExplosiveTrapT3Explosion:
                     {
                         if (projectile.damage > 0 && source is EntitySource_Parent parent && parent.Entity is NPC npc && npc.active
-                            && (npc.type == ModContent.NPCType<TrojanSquirrel>() || npc.type == ModContent.NPCType<TimberChampion>()))
+                            && (npc.ModNPC is TrojanSquirrelPart || npc.type == ModContent.NPCType<TimberChampion>()))
                         {
                             projectile.DamageType = DamageClass.Default;
                             projectile.friendly = false;
@@ -427,18 +427,27 @@ namespace FargowiltasSouls.Content.Projectiles
                         projectile.Kill();
                     }
 
-                    if (modPlayer.ShroomEnchantActive && player.GetToggleValue("ShroomiteShroom") && projectile.damage > 0 /*&& !townNPCProj*/ && projectile.velocity.Length() > 1 && projectile.minionSlots == 0 && projectile.type != ModContent.ProjectileType<ShroomiteShroom>() && player.ownedProjectileCounts[ModContent.ProjectileType<ShroomiteShroom>()] < 100)
+                    if (modPlayer.ShroomEnchantActive && player.GetToggleValue("ShroomiteShroom") && projectile.damage > 0 /*&& !townNPCProj*/ && projectile.velocity.Length() > 1 && projectile.minionSlots == 0 && projectile.type != ModContent.ProjectileType<ShroomiteShroom>() && player.ownedProjectileCounts[ModContent.ProjectileType<ShroomiteShroom>()] < 75)
                     {
-                        if (shroomiteMushroomCD >= 15)
+                        if (shroomiteMushroomCD >= 18)
                         {
                             shroomiteMushroomCD = 0;
 
-                            if (player.stealth == 0 || modPlayer.NatureForce || modPlayer.WizardEnchantActive)
+                            if (modPlayer.NatureForce || modPlayer.WizardEnchantActive)
+                            {
+                                shroomiteMushroomCD = 15;
+                            }
+                            if (player.stealth == 0)
                             {
                                 shroomiteMushroomCD = 10;
                             }
 
-                            Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center, projectile.velocity, ModContent.ProjectileType<ShroomiteShroom>(), projectile.damage / 2, projectile.knockBack / 2, projectile.owner);
+                            int p = Projectile.NewProjectile(projectile.GetSource_FromThis(), projectile.Center, projectile.velocity, ModContent.ProjectileType<ShroomiteShroom>(), projectile.damage / 2, projectile.knockBack / 2, projectile.owner);
+                            if (p != Main.maxProjectiles)
+                            {
+                                Main.projectile[p].GetGlobalProjectile<FargoSoulsGlobalProjectile>().AdamModifier = AdamModifier;
+                            }
+
                         }
                         shroomiteMushroomCD++;
                     }
@@ -694,7 +703,7 @@ namespace FargowiltasSouls.Content.Projectiles
             }
         }
 
-        const int MAX_TIKI_TIMER = 60;
+        const int MAX_TIKI_TIMER = 20;
 
         public override void AI(Projectile projectile)
         {
@@ -985,6 +994,8 @@ namespace FargowiltasSouls.Content.Projectiles
 
         public override void ModifyHitNPC(Projectile projectile, NPC target, ref NPC.HitModifiers modifiers)
         {
+            NPC sourceNPC = projectile.GetSourceNPC();
+
             if (stormTimer > 0)
                 modifiers.FinalDamage *= Main.player[projectile.owner].GetModPlayer<FargoSoulsPlayer>().SpiritForce ? 1.6f : 1.3f;
 
